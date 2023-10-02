@@ -12,16 +12,18 @@ import java.util.Optional;
 
 @Repository
 public class StudentRepositoryImpl implements StudentRepository{
+
     @Autowired
     private SessionFactory sessionFactory;
+
     @Override
     public void save(Student student) {
 
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        // if you dont have it in database, it will crate it. otherwise it will update it .
-        session.save(student);
+        // If we don't have it in the database, it'll create it. Otherwise, it'll update it.
+        session.saveOrUpdate(student);
 
         tx.commit();
         session.close();
@@ -30,16 +32,18 @@ public class StudentRepositoryImpl implements StudentRepository{
 
     @Override
     public Optional<Student> findById(Long id) {
+
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Student student = session.get(Student.class,id); // null
-        Optional<Student> optionalStudent = Optional.ofNullable(student); // if that student is null , an  empty "optional" object will be returned
+        Student student = session.get(Student.class, id); // null
+        Optional<Student> optionalStudent = Optional.ofNullable(student); // If that student is null, an empty "Optional" object will be returned.
 
         tx.commit();
         session.close();
 
         return optionalStudent;
+
     }
 
     @Override
@@ -54,7 +58,6 @@ public class StudentRepositoryImpl implements StudentRepository{
         session.close();
 
         return students;
-
     }
 
     @Override
